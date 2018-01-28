@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ToDoApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="container">
+    <h1 class="header">ToDo Application</h1>
+    <input id="input_task" class="input_task" type="text" maxlength="100" placeholder="Add task...">
+    <section class="taskbox">
+      <div class="task">
+        <input class="task_checkbox" type="checkbox">
+        <p class="task_content task_done" contenteditable="true">TASK NUMBER ONE</p>
+        <button if="btn_remove" class="btn_remove"></button>
+      </div>
+      <div class="task">
+        <input class="task_checkbox" type="checkbox">
+        <p class="task_content" contenteditable="true">TASK NUMBER TWO</p>
+        <button if="btn_remove" class="btn_remove"></button>
+      </div>
+    </section>
+    <button id="btn_clear" class="btn">Clear All</button>
+  </section>
+  <script src="done.js"></script>
+</body>
+</html>
