@@ -2,6 +2,7 @@
   --primary-color: #333;
   --bg-color: #CBD8EB;
   --secondary-color: #FD3D42;
+  --third-color: #7AC74F;
   --container-padding: 30px 250px;
   --input-padding: 3px 6px;
   --space-small: 10px;
@@ -86,6 +87,10 @@ html{
   padding-left: var(--space-small);
 }
 
+/* ---------------------------- */
+/*----- BUTTONS -----*/
+/* ---------------------------- */
+
 .btn_remove{
   position: absolute;
   top: var(--space-medium);
@@ -124,6 +129,12 @@ html{
   color: var(--btn-bg-color);
 }
 
+.btn_add{
+  font-weight: bold;
+  --btn-font-color: var(--bg-color);
+  --btn-bg-color: var(--third-color);
+}
+
 .task_done::after{
   content: "";
   display: block;
@@ -139,6 +150,10 @@ html{
 .task_done{
   opacity: 0.5;
 }
+
+/* ---------------------------- */
+/*----- MEDIA QUERIES -----*/
+/* ---------------------------- */
 
 @media screen and (max-width: 1100px){
   :root{
