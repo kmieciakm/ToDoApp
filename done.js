@@ -36,4 +36,12 @@ document.addEventListener("DOMContentLoaded",function(){
       }
     });
   }
+  //maxlength for contenteditable elements
+  let editable = document.getElementsByClassName("task_content");
+  for(var i=0; i<editable.length; i++){
+    editable[i].addEventListener("keydown",function(event){
+      if(event.target.innerText.length === 100 && event.keyCode != 8)
+          event.preventDefault();
+    });
+  }
 });

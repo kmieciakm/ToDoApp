@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+body{
+  background: #333;
+}
+
 html{
   font-size: 16px;
 }
@@ -25,7 +29,7 @@ html{
   padding: calc(2*var(--space-medium));
   margin: var(--container-padding);
   background-color: var(--bg-color);
-  min-height: 80vh;
+  min-height: 90vh;
   display: flex;
   flex-flow: column wrap;
   justify-content: space-around;
@@ -58,6 +62,7 @@ html{
   position: relative;
   border: 1px solid rgba(133,133,133,0.5);
   min-width: 400px;
+  max-width: 500px;
   border-top: none;
   cursor: pointer;
   padding: var(--space-medium);
@@ -82,7 +87,9 @@ html{
 
 .task_content{
   position: relative;
+  white-space: pre-wrap !important;
   font-weight: 600;
+  margin-right: var(--space-medium);
   display: inline-block;
   padding-left: var(--space-small);
 }
@@ -118,6 +125,7 @@ html{
   letter-spacing: 1px;
   font-size: 1.2rem;
   border: 2px solid var(--btn-bg-color);
+  border-radius: 2px;
   background-color: var(--btn-bg-color);
   color: #fff;
   cursor: pointer;
