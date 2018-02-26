@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded",function(){
         console.log("Cannot open database with error: ", event.target.errorCode);
     }
 
-    //add client event  
+    //add task
     let btn = document.getElementById("btn_add");
     btn.addEventListener("click",addTask);
 
@@ -128,6 +128,14 @@ document.addEventListener("DOMContentLoaded",function(){
                 UpdateStatus(currentTask.parentElement);
             });
         }
+        //click on remove button
+        let btn_remove = document.getElementsByClassName("btn_remove");
+        for(var i=0; i<btn_remove.length; i++){
+            btn_remove[i].addEventListener("click",function(){
+                let currentTask = event.target.parentElement;
+                removeTask(currentTask);
+            })
+        }
         //maxlength for contenteditable elements
         let editable = document.getElementsByClassName("task_content");
         for(var i=0; i<editable.length; i++){
@@ -165,6 +173,44 @@ document.addEventListener("DOMContentLoaded",function(){
                 }
                 cursor.continue();
             }
+        }
+    }
+
+    //remove all tasc   
+    let btn_clear = document.getElementById("btn_clear");
+    btn_clear.addEventListener("click",ClearAll);
+
+    function ClearAll(){
+        let verify = confirm("You are trying to remove the all tasks.\nAre you sure?");
+        if(verify){
+            indexedDB.deleteDatabase("tasksDB");
+            location.reload();
+        }else{
+            alert("The tasks was not deleted");
+        }   
+    }
+
+    //remove relevant task
+    
+    function removeTask(currentTask){
+        var currentTaskId = currentTask.getAttribute("name");
+
+        let transaction = db.transaction(["tasksStore"],"readwrite");
+        let store = transaction.objectStore("tasksStore");
+
+        let verify = confirm("You are trying to remove your task.\nAre you sure?");
+        if(verify){
+            request = store.delete(Number(currentTaskId));
+            request.onsuccess = function(){
+                console.log("removed task: "+currentTaskId);
+            }
+            request.onerror = function(event){
+                alert("Sorry, the task was not deleted");
+                console.log("Error: "+event.target.error.name);
+            }
+            showTasks();
+        }else{
+            alert("The client was not deleted");
         }
     }
        
