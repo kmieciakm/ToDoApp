@@ -65,11 +65,13 @@ document.addEventListener("DOMContentLoaded",function(){
         index.openCursor().onsuccess = function(event){
             var cursor = event.target.result;
             if(cursor){
-                output += "<div class='task' name="+cursor.value.idStore+">"
-                            + "<input class='task_checkbox div-inner' type='checkbox'>";
                 if(cursor.value.isdone){
+                    output += "<div class='task done' name="+cursor.value.idStore+">"
+                            + "<input class='task_checkbox div-inner' type='checkbox' checked>";
                     output += "<p class='task_content div-inner task_done' contenteditable='true'>"+cursor.value.content+"</p>";
                 }else{
+                    output += "<div class='task' name="+cursor.value.idStore+">"
+                            + "<input class='task_checkbox div-inner' type='checkbox'>";
                     output += "<p class='task_content div-inner' contenteditable='true'>"+cursor.value.content+"</p>";
                 }
                 output += "<button id='btn_remove' class='btn_remove div-inner'></button>"
@@ -83,7 +85,7 @@ document.addEventListener("DOMContentLoaded",function(){
     }
 
     function addDoneClick(){
-        //Preventing Child from firing parent's click event, every child inner 'task' div have 'inner' class
+        //Preventing Child from firing parent's click event, every child inner 'task' div have 'div-inner' class
         let inner = document.getElementsByClassName("div-inner");
         for(var i=0; i<inner.length; i++){
             inner[i].addEventListener("click",function(event){
@@ -99,25 +101,31 @@ document.addEventListener("DOMContentLoaded",function(){
                 if(children[0].checked){
                     children[0].checked = false;
                     children[1].classList.remove("task_done");
+                    currentTask.classList.remove("done");
                 }else{
                     children[0].checked = true;
                     children[1].classList.add("task_done");
+                    currentTask.classList.add("done");
                 }
+                UpdateStatus(currentTask);
             });
         }
         //click on checkbox element
         let checkboxs = document.getElementsByClassName("task_checkbox");
         for(var i=0; i<checkboxs.length; i++){
             checkboxs[i].addEventListener("click",function(){
-            let currentTask = event.target;
-            let children = currentTask.parentElement.children;
-            if(children[0].checked){
-                children[0].checked = true;
-                children[1].classList.add("task_done");
-            }else{
-                children[0].checked = false;
-                children[1].classList.remove("task_done");
-            }
+                let currentTask = event.target;
+                let children = currentTask.parentElement.children;
+                if(children[0].checked){
+                    children[0].checked = true;
+                    children[1].classList.add("task_done");
+                    currentTask.parentElement.classList.add("done");
+                }else{
+                    children[0].checked = false;
+                    children[1].classList.remove("task_done");
+                    currentTask.parentElement.classList.remove("done");
+                }
+                UpdateStatus(currentTask.parentElement);
             });
         }
         //maxlength for contenteditable elements
@@ -128,6 +136,36 @@ document.addEventListener("DOMContentLoaded",function(){
                 event.preventDefault();
             });
         }   
+    }
+
+    function UpdateStatus(currentTask){
+        var currentTaskId = currentTask.getAttribute("name");
+
+        let transaction = db.transaction(["tasksStore"],"readwrite");
+        let store = transaction.objectStore("tasksStore");
+        let index = store.index('tasksIndex');
+
+        index.openCursor().onsuccess = function(){
+            var cursor = event.target.result;
+            if(cursor){
+                if(cursor.value.idStore == currentTaskId){
+                    if(currentTask.classList.contains("done")){
+                        cursor.value.isdone = 1;
+                        request = cursor.update(cursor.value);
+                        request.onsuccess = function(){
+                            console.log("Updated task status");
+                        }
+                    }else{
+                        cursor.value.isdone = 0;
+                        request = cursor.update(cursor.value);
+                        request.onsuccess = function(){
+                            console.log("Updated task status");
+                        }
+                    }
+                }
+                cursor.continue();
+            }
+        }
     }
        
 });
