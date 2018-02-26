@@ -151,29 +151,24 @@ document.addEventListener("DOMContentLoaded",function(){
 
         let transaction = db.transaction(["tasksStore"],"readwrite");
         let store = transaction.objectStore("tasksStore");
-        let index = store.index('tasksIndex');
 
-        index.openCursor().onsuccess = function(){
-            var cursor = event.target.result;
-            if(cursor){
-                if(cursor.value.idStore == currentTaskId){
-                    if(currentTask.classList.contains("done")){
-                        cursor.value.isdone = 1;
-                        request = cursor.update(cursor.value);
-                        request.onsuccess = function(){
-                            console.log("Updated task status");
-                        }
-                    }else{
-                        cursor.value.isdone = 0;
-                        request = cursor.update(cursor.value);
-                        request.onsuccess = function(){
-                            console.log("Updated task status");
-                        }
-                    }
+        request = store.get(Number(currentTaskId));
+        request.onsuccess = function(){
+            let taskToUpdate = event.target.result;
+            if(taskToUpdate.isdone){
+                taskToUpdate.isdone = 0;
+                request = store.put(taskToUpdate);
+                request.onsuccess = function(){
+                    console.log("Updated task status");
                 }
-                cursor.continue();
+            }else{
+                taskToUpdate.isdone = 1;
+                request = store.put(taskToUpdate);
+                request.onsuccess = function(){
+                    console.log("Updated task status");
+                }
             }
-        }
+        }         
     }
 
     //remove all tasc   
@@ -191,7 +186,6 @@ document.addEventListener("DOMContentLoaded",function(){
     }
 
     //remove relevant task
-    
     function removeTask(currentTask){
         var currentTaskId = currentTask.getAttribute("name");
 
